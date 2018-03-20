@@ -65,9 +65,9 @@ func (t *timeRFC3339) UnmarshalText(data []byte) (err error) {
 
 // internal type used for marshalling
 type accessPolicy struct {
-	Start      *timeRFC3339 `json:"Start,omitempty"`
-	Expiry     *timeRFC3339 `json:"Expiry,omitempty"`
-	Permission *string      `json:"Permission,omitempty"`
+	Start      *timeRFC3339 `xml:"Start"`
+	Expiry     *timeRFC3339 `xml:"Expiry"`
+	Permission *string      `xml:"Permission"`
 }
 
 // MarshalXML implements the xml.Marshaler interface for AccessPolicy.
@@ -90,9 +90,9 @@ func (ap *AccessPolicy) UnmarshalXML(d *xml.Decoder, start xml.StartElement) err
 
 // internal type used for marshalling
 type shareProperties struct {
-	LastModified timeRFC1123 `json:"Last-Modified,omitempty"`
-	Etag         ETag        `json:"Etag,omitempty"`
-	Quota        int32       `json:"Quota,omitempty"`
+	LastModified timeRFC1123 `xml:"Last-Modified"`
+	Etag         ETag        `xml:"Etag"`
+	Quota        int32       `xml:"Quota"`
 }
 
 // MarshalXML implements the xml.Marshaler interface for ShareProperties.

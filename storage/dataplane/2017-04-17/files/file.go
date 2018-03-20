@@ -19,7 +19,7 @@ package storage
 
 import (
 	"context"
-	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"github.com/Azure/azure-pipeline-go/pipeline"
 	"io"
@@ -389,7 +389,7 @@ func (client FileClient) getRangeListResponder(resp pipeline.Response) (pipeline
 		return result, NewResponseError(err, resp.Response(), "failed to read response body")
 	}
 	if len(b) > 0 {
-		err = json.Unmarshal(b, result)
+		err = xml.Unmarshal(b, result)
 		if err != nil {
 			return result, NewResponseError(err, resp.Response(), "failed to unmarshal response body")
 		}

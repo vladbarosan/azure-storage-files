@@ -20,7 +20,7 @@ package storage
 import (
 	"bytes"
 	"context"
-	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"github.com/Azure/azure-pipeline-go/pipeline"
 	"io/ioutil"
@@ -95,7 +95,7 @@ func (client ServiceClient) getPropertiesResponder(resp pipeline.Response) (pipe
 		return result, NewResponseError(err, resp.Response(), "failed to read response body")
 	}
 	if len(b) > 0 {
-		err = json.Unmarshal(b, result)
+		err = xml.Unmarshal(b, result)
 		if err != nil {
 			return result, NewResponseError(err, resp.Response(), "failed to unmarshal response body")
 		}
@@ -181,7 +181,7 @@ func (client ServiceClient) listSharesSegmentResponder(resp pipeline.Response) (
 		return result, NewResponseError(err, resp.Response(), "failed to read response body")
 	}
 	if len(b) > 0 {
-		err = json.Unmarshal(b, result)
+		err = xml.Unmarshal(b, result)
 		if err != nil {
 			return result, NewResponseError(err, resp.Response(), "failed to unmarshal response body")
 		}
@@ -249,11 +249,11 @@ func (client ServiceClient) setPropertiesPreparer(storageServiceProperties Servi
 	params.Set("comp", "properties")
 	req.URL.RawQuery = params.Encode()
 	req.Header.Set("x-ms-version", ServiceVersion)
-	b, err := json.Marshal(storageServiceProperties)
+	b, err := xml.Marshal(storageServiceProperties)
 	if err != nil {
 		return req, pipeline.NewError(err, "failed to marshal request body")
 	}
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", "application/xml")
 	err = req.SetBody(bytes.NewReader(b))
 	if err != nil {
 		return req, pipeline.NewError(err, "failed to set request body")

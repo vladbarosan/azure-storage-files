@@ -18,13 +18,13 @@ package storage
 // Changes may cause incorrect behavior and will be lost if the code is regenerated.
 
 import (
+	"encoding/xml"
 	"io"
 	"net/http"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
-	"encoding/xml"
 )
 
 // ETag is an entity tag.
@@ -151,11 +151,11 @@ const (
 // AccessPolicy - An Access policy.
 type AccessPolicy struct {
 	// Start - The date-time the policy is active.
-	Start *time.Time `json:"Start,omitempty"`
+	Start *time.Time `xml:"Start"`
 	// Expiry - The date-time the policy expires.
-	Expiry *time.Time `json:"Expiry,omitempty"`
+	Expiry *time.Time `xml:"Expiry"`
 	// Permission - The permissions for the ACL policy.
-	Permission *string `json:"Permission,omitempty"`
+	Permission *string `xml:"Permission"`
 }
 
 // CorsRule - CORS is an HTTP feature that enables a web application running under one domain to access resources in
@@ -164,15 +164,15 @@ type AccessPolicy struct {
 // APIs in another domain.
 type CorsRule struct {
 	// AllowedOrigins - The origin domains that are permitted to make a request against the storage service via CORS. The origin domain is the domain from which the request originates. Note that the origin must be an exact case-sensitive match with the origin that the user age sends to the service. You can also use the wildcard character '*' to allow all origin domains to make requests via CORS.
-	AllowedOrigins string `json:"AllowedOrigins,omitempty"`
+	AllowedOrigins string `xml:"AllowedOrigins"`
 	// AllowedMethods - The methods (HTTP request verbs) that the origin domain may use for a CORS request. (comma separated)
-	AllowedMethods string `json:"AllowedMethods,omitempty"`
+	AllowedMethods string `xml:"AllowedMethods"`
 	// AllowedHeaders - The request headers that the origin domain may specify on the CORS request.
-	AllowedHeaders string `json:"AllowedHeaders,omitempty"`
+	AllowedHeaders string `xml:"AllowedHeaders"`
 	// ExposedHeaders - The response headers that may be sent in the response to the CORS request and exposed by the browser to the request issuer.
-	ExposedHeaders string `json:"ExposedHeaders,omitempty"`
+	ExposedHeaders string `xml:"ExposedHeaders"`
 	// MaxAgeInSeconds - The maximum amount time that a browser should cache the preflight OPTIONS request.
-	MaxAgeInSeconds int32 `json:"MaxAgeInSeconds,omitempty"`
+	MaxAgeInSeconds int32 `xml:"MaxAgeInSeconds"`
 }
 
 // DirectoryCreateResponse ...
@@ -286,9 +286,11 @@ func (ddr DirectoryDeleteResponse) Version() string {
 
 // DirectoryEntry - Directory entry.
 type DirectoryEntry struct {
-	EntryType string `json:"EntryType,omitempty"`
+	// XMLName is used for marshalling and is subject to removal in a future release.
+	XMLName   xml.Name `xml:"Directory"`
+	EntryType string   `xml:"EntryType"`
 	// Name - Name of the entry.
-	Name string `json:"Name,omitempty"`
+	Name string `xml:"Name"`
 }
 
 // DirectoryGetPropertiesResponse ...
@@ -605,9 +607,9 @@ func (dr DownloadResponse) NewMetadata() Metadata {
 
 // Entry - Abstract for entries that can be listed from Directory.
 type Entry struct {
-	EntryType string `json:"EntryType,omitempty"`
+	EntryType string `xml:"EntryType"`
 	// Name - Name of the entry.
-	Name string `json:"Name,omitempty"`
+	Name string `xml:"Name"`
 }
 
 // FileAbortCopyResponse ...
@@ -764,10 +766,12 @@ func (fdr FileDeleteResponse) Version() string {
 
 // FileEntry - File entry.
 type FileEntry struct {
-	EntryType string `json:"EntryType,omitempty"`
+	// XMLName is used for marshalling and is subject to removal in a future release.
+	XMLName   xml.Name `xml:"File"`
+	EntryType string   `xml:"EntryType"`
 	// Name - Name of the entry.
-	Name       string        `json:"Name,omitempty"`
-	Properties *FileProperty `json:"Properties,omitempty"`
+	Name       string        `xml:"Name"`
+	Properties *FileProperty `xml:"Properties"`
 }
 
 // FileGetPropertiesResponse ...
@@ -938,7 +942,7 @@ func (fgpr FileGetPropertiesResponse) NewMetadata() Metadata {
 // FileProperty - File properties.
 type FileProperty struct {
 	// ContentLength - Content length of the file. This value may not be up-to-date since an SMB client may have modified the file locally. The value of Content-Length may not reflect that fact until the handle is closed or the op-lock is broken. To retrieve current property values, call Get File Properties.
-	ContentLength int64 `json:"Content-Length,omitempty"`
+	ContentLength int64 `xml:"Content-Length"`
 }
 
 // FileSetHTTPHeadersResponse ...
@@ -1204,16 +1208,18 @@ func (furr FileUploadRangeResponse) Version() string {
 
 // ListDirectoriesAndFilesResponse - An enumeration of directories and files.
 type ListDirectoriesAndFilesResponse struct {
-	rawResponse     *http.Response
-	ServiceEndpoint string      `json:"ServiceEndpoint,omitempty"`
-	ShareName       string      `json:"ShareName,omitempty"`
-	ShareSnapshot   *string     `json:"ShareSnapshot,omitempty"`
-	DirectoryPath   string      `json:"DirectoryPath,omitempty"`
-	Prefix          string      `json:"Prefix,omitempty"`
-	Marker          *string     `json:"Marker,omitempty"`
-	MaxResults      *int32      `json:"MaxResults,omitempty"`
-	Entries         []FileEntry `json:"Entries,omitempty"`
-	NextMarker      Marker      `json:"NextMarker"`
+	rawResponse *http.Response
+	// XMLName is used for marshalling and is subject to removal in a future release.
+	XMLName         xml.Name    `xml:"EnumerationResults"`
+	ServiceEndpoint string      `xml:"ServiceEndpoint,attr"`
+	ShareName       string      `xml:"ShareName,attr"`
+	ShareSnapshot   *string     `xml:"ShareSnapshot,attr"`
+	DirectoryPath   string      `xml:"DirectoryPath,attr"`
+	Prefix          string      `xml:"Prefix"`
+	Marker          *string     `xml:"Marker"`
+	MaxResults      *int32      `xml:"MaxResults"`
+	Entries         []FileEntry `xml:"Entries>Entries"`
+	NextMarker      Marker      `xml:"NextMarker"`
 }
 
 // Response returns the raw HTTP response object.
@@ -1261,13 +1267,15 @@ func (ldafr ListDirectoriesAndFilesResponse) Version() string {
 
 // ListSharesResponse - An enumeration of shares.
 type ListSharesResponse struct {
-	rawResponse     *http.Response
-	ServiceEndpoint string  `json:"ServiceEndpoint,omitempty"`
-	Prefix          *string `json:"Prefix,omitempty"`
-	Marker          *string `json:"Marker,omitempty"`
-	MaxResults      *int32  `json:"MaxResults,omitempty"`
-	Shares          []Share `json:"Shares,omitempty"`
-	NextMarker      Marker  `json:"NextMarker"`
+	rawResponse *http.Response
+	// XMLName is used for marshalling and is subject to removal in a future release.
+	XMLName         xml.Name `xml:"EnumerationResults"`
+	ServiceEndpoint string   `xml:"ServiceEndpoint,attr"`
+	Prefix          *string  `xml:"Prefix"`
+	Marker          *string  `xml:"Marker"`
+	MaxResults      *int32   `xml:"MaxResults"`
+	Shares          []Share  `xml:"Shares>Share"`
+	NextMarker      Marker   `xml:"NextMarker"`
 }
 
 // Response returns the raw HTTP response object.
@@ -1298,26 +1306,26 @@ func (lsr ListSharesResponse) Version() string {
 // Metrics - Storage Analytics metrics for file service.
 type Metrics struct {
 	// Version - The version of Storage Analytics to configure.
-	Version *string `json:"Version,omitempty"`
+	Version *string `xml:"Version"`
 	// Enabled - Indicates whether metrics are enabled for the File service.
-	Enabled bool `json:"Enabled,omitempty"`
+	Enabled bool `xml:"Enabled"`
 	// IncludeAPIs - Indicates whether metrics should generate summary statistics for called API operations.
-	IncludeAPIs     *bool            `json:"IncludeAPIs,omitempty"`
-	RetentionPolicy *RetentionPolicy `json:"RetentionPolicy,omitempty"`
+	IncludeAPIs     *bool            `xml:"IncludeAPIs"`
+	RetentionPolicy *RetentionPolicy `xml:"RetentionPolicy"`
 }
 
 // Range - An Azure Storage file range.
 type Range struct {
 	// Start - Start of the range.
-	Start int64 `json:"Start,omitempty"`
+	Start int64 `xml:"Start"`
 	// End - End of the range.
-	End int64 `json:"End,omitempty"`
+	End int64 `xml:"End"`
 }
 
 // Ranges ...
 type Ranges struct {
 	rawResponse *http.Response
-	Value       []Range `json:"value,omitempty"`
+	Value       []Range `xml:"Range"`
 }
 
 // Response returns the raw HTTP response object.
@@ -1392,20 +1400,20 @@ func (r Ranges) Version() string {
 // RetentionPolicy - The retention policy.
 type RetentionPolicy struct {
 	// Enabled - Indicates whether a retention policy is enabled for the File service. If false, metrics data is retained, and the user is responsible for deleting it.
-	Enabled bool `json:"Enabled,omitempty"`
+	Enabled bool `xml:"Enabled"`
 	// Days - Indicates the number of days that metrics data should be retained. All data older than this value will be deleted. Metrics data is deleted on a best-effort basis after the retention period expires.
-	Days *int32 `json:"Days,omitempty"`
+	Days *int32 `xml:"Days"`
 }
 
 // ServiceProperties - Storage service properties.
 type ServiceProperties struct {
 	rawResponse *http.Response
 	// HourMetrics - A summary of request statistics grouped by API in hourly aggregates for files.
-	HourMetrics *Metrics `json:"HourMetrics,omitempty"`
+	HourMetrics *Metrics `xml:"HourMetrics"`
 	// MinuteMetrics - A summary of request statistics grouped by API in minute aggregates for files.
-	MinuteMetrics *Metrics `json:"MinuteMetrics,omitempty"`
+	MinuteMetrics *Metrics `xml:"MinuteMetrics"`
 	// Cors - The set of CORS rules.
-	Cors []CorsRule `json:"Cors,omitempty"`
+	Cors []CorsRule `xml:"Cors>CorsRule"`
 }
 
 // Response returns the raw HTTP response object.
@@ -1465,10 +1473,10 @@ func (sspr ServiceSetPropertiesResponse) Version() string {
 
 // Share - An Azure Storage share.
 type Share struct {
-	Name       string          `json:"Name,omitempty"`
-	Snapshot   *string         `json:"Snapshot,omitempty"`
-	Properties ShareProperties `json:"Properties,omitempty"`
-	Metadata   Metadata        `json:"Metadata,omitempty"`
+	Name       string          `xml:"Name"`
+	Snapshot   *string         `xml:"Snapshot"`
+	Properties ShareProperties `xml:"Properties"`
+	Metadata   Metadata        `xml:"Metadata"`
 }
 
 // ShareCreateResponse ...
@@ -1730,9 +1738,9 @@ func (sgpr ShareGetPropertiesResponse) NewMetadata() Metadata {
 
 // ShareProperties - Properties of a share.
 type ShareProperties struct {
-	LastModified time.Time `json:"Last-Modified,omitempty"`
-	Etag         ETag      `json:"Etag,omitempty"`
-	Quota        int32     `json:"Quota,omitempty"`
+	LastModified time.Time `xml:"Last-Modified"`
+	Etag         ETag      `xml:"Etag"`
+	Quota        int32     `xml:"Quota"`
 }
 
 // ShareSetAccessPolicyResponse ...
@@ -1922,7 +1930,7 @@ func (ssqr ShareSetQuotaResponse) Version() string {
 type ShareStats struct {
 	rawResponse *http.Response
 	// ShareUsage - The approximate size of the data stored on the share, rounded up to the nearest gigabyte. Note that this value may not include all recently created or recently resized files.
-	ShareUsage int32 `json:"ShareUsage,omitempty"`
+	ShareUsage int32 `xml:"ShareUsage"`
 }
 
 // Response returns the raw HTTP response object.
@@ -1984,15 +1992,15 @@ func (ss ShareStats) Version() string {
 // SignedIdentifier - Signed identifier.
 type SignedIdentifier struct {
 	// ID - A unique id.
-	ID string `json:"Id,omitempty"`
+	ID string `xml:"Id"`
 	// AccessPolicy - The access policy.
-	AccessPolicy *AccessPolicy `json:"AccessPolicy,omitempty"`
+	AccessPolicy *AccessPolicy `xml:"AccessPolicy"`
 }
 
 // SignedIdentifiers ...
 type SignedIdentifiers struct {
 	rawResponse *http.Response
-	Value       []SignedIdentifier `json:"value,omitempty"`
+	Value       []SignedIdentifier `xml:"SignedIdentifier"`
 }
 
 // Response returns the raw HTTP response object.

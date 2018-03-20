@@ -20,7 +20,7 @@ package storage
 import (
 	"bytes"
 	"context"
-	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"github.com/Azure/azure-pipeline-go/pipeline"
 	"io/ioutil"
@@ -271,7 +271,7 @@ func (client ShareClient) getAccessPolicyResponder(resp pipeline.Response) (pipe
 		return result, NewResponseError(err, resp.Response(), "failed to read response body")
 	}
 	if len(b) > 0 {
-		err = json.Unmarshal(b, result)
+		err = xml.Unmarshal(b, result)
 		if err != nil {
 			return result, NewResponseError(err, resp.Response(), "failed to unmarshal response body")
 		}
@@ -389,7 +389,7 @@ func (client ShareClient) getStatisticsResponder(resp pipeline.Response) (pipeli
 		return result, NewResponseError(err, resp.Response(), "failed to read response body")
 	}
 	if len(b) > 0 {
-		err = json.Unmarshal(b, result)
+		err = xml.Unmarshal(b, result)
 		if err != nil {
 			return result, NewResponseError(err, resp.Response(), "failed to unmarshal response body")
 		}
@@ -435,11 +435,11 @@ func (client ShareClient) setAccessPolicyPreparer(shareACL []SignedIdentifier, t
 	params.Set("comp", "acl")
 	req.URL.RawQuery = params.Encode()
 	req.Header.Set("x-ms-version", ServiceVersion)
-	b, err := json.Marshal(SignedIdentifiers{Value: shareACL})
+	b, err := xml.Marshal(SignedIdentifiers{Value: shareACL})
 	if err != nil {
 		return req, pipeline.NewError(err, "failed to marshal request body")
 	}
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", "application/xml")
 	err = req.SetBody(bytes.NewReader(b))
 	if err != nil {
 		return req, pipeline.NewError(err, "failed to set request body")
