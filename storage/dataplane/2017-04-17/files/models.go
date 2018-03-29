@@ -387,6 +387,19 @@ type DirectoryGetPropertiesResponse struct {
 	rawResponse *http.Response
 }
 
+// NewMetadata returns user-defined key/value pairs.
+func (dgpr DirectoryGetPropertiesResponse) NewMetadata() Metadata {
+	md := Metadata{}
+	for k, v := range dgpr.rawResponse.Header {
+		if len(k) > mdPrefixLen {
+			if prefix := k[0:mdPrefixLen]; strings.EqualFold(prefix, mdPrefix) {
+				md[strings.ToLower(k[mdPrefixLen:])] = v[0]
+			}
+		}
+	}
+	return md
+}
+
 // Response returns the raw HTTP response object.
 func (dgpr DirectoryGetPropertiesResponse) Response() *http.Response {
 	return dgpr.rawResponse
@@ -448,19 +461,6 @@ func (dgpr DirectoryGetPropertiesResponse) Version() string {
 	return dgpr.rawResponse.Header.Get("x-ms-version")
 }
 
-// NewMetadata returns user-defined key/value pairs.
-func (dgpr DirectoryGetPropertiesResponse) NewMetadata() Metadata {
-	md := Metadata{}
-	for k, v := range dgpr.rawResponse.Header {
-		if len(k) > mdPrefixLen {
-			if prefix := k[0:mdPrefixLen]; strings.EqualFold(prefix, mdPrefix) {
-				md[strings.ToLower(k[mdPrefixLen:])] = v[0]
-			}
-		}
-	}
-	return md
-}
-
 // DirectorySetMetadataResponse ...
 type DirectorySetMetadataResponse struct {
 	rawResponse *http.Response
@@ -517,6 +517,19 @@ func (dsmr DirectorySetMetadataResponse) Version() string {
 // DownloadResponse ...
 type DownloadResponse struct {
 	rawResponse *http.Response
+}
+
+// NewMetadata returns user-defined key/value pairs.
+func (dr DownloadResponse) NewMetadata() Metadata {
+	md := Metadata{}
+	for k, v := range dr.rawResponse.Header {
+		if len(k) > mdPrefixLen {
+			if prefix := k[0:mdPrefixLen]; strings.EqualFold(prefix, mdPrefix) {
+				md[strings.ToLower(k[mdPrefixLen:])] = v[0]
+			}
+		}
+	}
+	return md
 }
 
 // Response returns the raw HTTP response object.
@@ -681,19 +694,6 @@ func (dr DownloadResponse) Version() string {
 	return dr.rawResponse.Header.Get("x-ms-version")
 }
 
-// NewMetadata returns user-defined key/value pairs.
-func (dr DownloadResponse) NewMetadata() Metadata {
-	md := Metadata{}
-	for k, v := range dr.rawResponse.Header {
-		if len(k) > mdPrefixLen {
-			if prefix := k[0:mdPrefixLen]; strings.EqualFold(prefix, mdPrefix) {
-				md[strings.ToLower(k[mdPrefixLen:])] = v[0]
-			}
-		}
-	}
-	return md
-}
-
 // BasicEntry abstract for entries that can be listed from Directory.
 type BasicEntry interface {
 	AsDirectoryEntry() (*DirectoryEntry, bool)
@@ -734,14 +734,23 @@ func unmarshalBasicEntry(d *xml.Decoder, start xml.StartElement) (BasicEntry, er
 	case string(EntryTypeDirectory):
 		var de DirectoryEntry
 		err := d.DecodeElement(&de, &start)
+		if err == nil {
+			de.EntryType = EntryTypeDirectory
+		}
 		return de, err
 	case string(EntryTypeFile):
 		var fe FileEntry
 		err := d.DecodeElement(&fe, &start)
+		if err == nil {
+			fe.EntryType = EntryTypeFile
+		}
 		return fe, err
 	default:
 		var eVar Entry
 		err := d.DecodeElement(&eVar, &start)
+		if err == nil {
+			eVar.EntryType = EntryTypeEntry
+		}
 		return eVar, err
 	}
 }
@@ -970,6 +979,19 @@ type FileGetPropertiesResponse struct {
 	rawResponse *http.Response
 }
 
+// NewMetadata returns user-defined key/value pairs.
+func (fgpr FileGetPropertiesResponse) NewMetadata() Metadata {
+	md := Metadata{}
+	for k, v := range fgpr.rawResponse.Header {
+		if len(k) > mdPrefixLen {
+			if prefix := k[0:mdPrefixLen]; strings.EqualFold(prefix, mdPrefix) {
+				md[strings.ToLower(k[mdPrefixLen:])] = v[0]
+			}
+		}
+	}
+	return md
+}
+
 // Response returns the raw HTTP response object.
 func (fgpr FileGetPropertiesResponse) Response() *http.Response {
 	return fgpr.rawResponse
@@ -1115,19 +1137,6 @@ func (fgpr FileGetPropertiesResponse) RequestID() string {
 // Version returns the value for header x-ms-version.
 func (fgpr FileGetPropertiesResponse) Version() string {
 	return fgpr.rawResponse.Header.Get("x-ms-version")
-}
-
-// NewMetadata returns user-defined key/value pairs.
-func (fgpr FileGetPropertiesResponse) NewMetadata() Metadata {
-	md := Metadata{}
-	for k, v := range fgpr.rawResponse.Header {
-		if len(k) > mdPrefixLen {
-			if prefix := k[0:mdPrefixLen]; strings.EqualFold(prefix, mdPrefix) {
-				md[strings.ToLower(k[mdPrefixLen:])] = v[0]
-			}
-		}
-	}
-	return md
 }
 
 // FileProperty - File properties.
@@ -1896,6 +1905,19 @@ type ShareGetPropertiesResponse struct {
 	rawResponse *http.Response
 }
 
+// NewMetadata returns user-defined key/value pairs.
+func (sgpr ShareGetPropertiesResponse) NewMetadata() Metadata {
+	md := Metadata{}
+	for k, v := range sgpr.rawResponse.Header {
+		if len(k) > mdPrefixLen {
+			if prefix := k[0:mdPrefixLen]; strings.EqualFold(prefix, mdPrefix) {
+				md[strings.ToLower(k[mdPrefixLen:])] = v[0]
+			}
+		}
+	}
+	return md
+}
+
 // Response returns the raw HTTP response object.
 func (sgpr ShareGetPropertiesResponse) Response() *http.Response {
 	return sgpr.rawResponse
@@ -1963,19 +1985,6 @@ func (sgpr ShareGetPropertiesResponse) RequestID() string {
 // Version returns the value for header x-ms-version.
 func (sgpr ShareGetPropertiesResponse) Version() string {
 	return sgpr.rawResponse.Header.Get("x-ms-version")
-}
-
-// NewMetadata returns user-defined key/value pairs.
-func (sgpr ShareGetPropertiesResponse) NewMetadata() Metadata {
-	md := Metadata{}
-	for k, v := range sgpr.rawResponse.Header {
-		if len(k) > mdPrefixLen {
-			if prefix := k[0:mdPrefixLen]; strings.EqualFold(prefix, mdPrefix) {
-				md[strings.ToLower(k[mdPrefixLen:])] = v[0]
-			}
-		}
-	}
-	return md
 }
 
 // ShareProperties - Properties of a share.

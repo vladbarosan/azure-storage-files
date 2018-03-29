@@ -44,14 +44,14 @@ func NewFileClient(url url.URL, p pipeline.Pipeline) FileClient {
 // the timeout parameter is expressed in seconds. For more information, see <a
 // href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting
 // Timeouts for File Service Operations.</a>
-func (client FileClient) AbortCopy(ctx context.Context, copyID string, copyActionAbortConstant string, timeout *int32) (*FileAbortCopyResponse, error) {
+func (client FileClient) AbortCopy(ctx context.Context, copyID string, timeout *int32) (*FileAbortCopyResponse, error) {
 	if err := validate([]validation{
 		{targetValue: timeout,
 			constraints: []constraint{{target: "timeout", name: null, rule: false,
 				chain: []constraint{{target: "timeout", name: inclusiveMinimum, rule: 0, chain: nil}}}}}}); err != nil {
 		return nil, err
 	}
-	req, err := client.abortCopyPreparer(copyID, copyActionAbortConstant, timeout)
+	req, err := client.abortCopyPreparer(copyID, timeout)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func (client FileClient) AbortCopy(ctx context.Context, copyID string, copyActio
 }
 
 // abortCopyPreparer prepares the AbortCopy request.
-func (client FileClient) abortCopyPreparer(copyID string, copyActionAbortConstant string, timeout *int32) (pipeline.Request, error) {
+func (client FileClient) abortCopyPreparer(copyID string, timeout *int32) (pipeline.Request, error) {
 	req, err := pipeline.NewRequest("PUT", client.url, nil)
 	if err != nil {
 		return req, pipeline.NewError(err, "failed to create request")
@@ -75,7 +75,7 @@ func (client FileClient) abortCopyPreparer(copyID string, copyActionAbortConstan
 	}
 	params.Set("comp", "copy")
 	req.URL.RawQuery = params.Encode()
-	req.Header.Set("x-ms-copy-action", copyActionAbortConstant)
+	req.Header.Set("x-ms-copy-action", "abort")
 	req.Header.Set("x-ms-version", ServiceVersion)
 	return req, nil
 }
@@ -92,9 +92,8 @@ func (client FileClient) abortCopyResponder(resp pipeline.Response) (pipeline.Re
 
 // Create creates a new file or replaces a file. Note it only initializes the file with no content.
 //
-// fileContentLength is specifies the maximum size for the file, up to 1 TB. fileTypeConstant is dummy constant
-// parameter, file type can only be file. timeout is the timeout parameter is expressed in seconds. For more
-// information, see <a
+// fileContentLength is specifies the maximum size for the file, up to 1 TB. timeout is the timeout parameter is
+// expressed in seconds. For more information, see <a
 // href="https://docs.microsoft.com/en-us/rest/api/storageservices/Setting-Timeouts-for-File-Service-Operations?redirectedfrom=MSDN">Setting
 // Timeouts for File Service Operations.</a> fileContentType is sets the MIME content type of the file. The default
 // type is 'application/octet-stream'. fileContentEncoding is specifies which content encodings have been applied to
@@ -102,14 +101,14 @@ func (client FileClient) abortCopyResponder(resp pipeline.Response) (pipeline.Re
 // file's cache control. The File service stores this value but does not use or modify it. fileContentMD5 is sets the
 // file's MD5 hash. fileContentDisposition is sets the file's Content-Disposition header. metadata is a name-value pair
 // to associate with a file storage object. Metadata names must adhere to the naming rules for C# identifiers.
-func (client FileClient) Create(ctx context.Context, fileContentLength int64, fileTypeConstant string, timeout *int32, fileContentType *string, fileContentEncoding *string, fileContentLanguage *string, fileCacheControl *string, fileContentMD5 *string, fileContentDisposition *string, metadata map[string]string) (*FileCreateResponse, error) {
+func (client FileClient) Create(ctx context.Context, fileContentLength int64, timeout *int32, fileContentType *string, fileContentEncoding *string, fileContentLanguage *string, fileCacheControl *string, fileContentMD5 *string, fileContentDisposition *string, metadata map[string]string) (*FileCreateResponse, error) {
 	if err := validate([]validation{
 		{targetValue: timeout,
 			constraints: []constraint{{target: "timeout", name: null, rule: false,
 				chain: []constraint{{target: "timeout", name: inclusiveMinimum, rule: 0, chain: nil}}}}}}); err != nil {
 		return nil, err
 	}
-	req, err := client.createPreparer(fileContentLength, fileTypeConstant, timeout, fileContentType, fileContentEncoding, fileContentLanguage, fileCacheControl, fileContentMD5, fileContentDisposition, metadata)
+	req, err := client.createPreparer(fileContentLength, timeout, fileContentType, fileContentEncoding, fileContentLanguage, fileCacheControl, fileContentMD5, fileContentDisposition, metadata)
 	if err != nil {
 		return nil, err
 	}
@@ -121,7 +120,7 @@ func (client FileClient) Create(ctx context.Context, fileContentLength int64, fi
 }
 
 // createPreparer prepares the Create request.
-func (client FileClient) createPreparer(fileContentLength int64, fileTypeConstant string, timeout *int32, fileContentType *string, fileContentEncoding *string, fileContentLanguage *string, fileCacheControl *string, fileContentMD5 *string, fileContentDisposition *string, metadata map[string]string) (pipeline.Request, error) {
+func (client FileClient) createPreparer(fileContentLength int64, timeout *int32, fileContentType *string, fileContentEncoding *string, fileContentLanguage *string, fileCacheControl *string, fileContentMD5 *string, fileContentDisposition *string, metadata map[string]string) (pipeline.Request, error) {
 	req, err := pipeline.NewRequest("PUT", client.url, nil)
 	if err != nil {
 		return req, pipeline.NewError(err, "failed to create request")
@@ -133,7 +132,7 @@ func (client FileClient) createPreparer(fileContentLength int64, fileTypeConstan
 	req.URL.RawQuery = params.Encode()
 	req.Header.Set("x-ms-version", ServiceVersion)
 	req.Header.Set("x-ms-content-length", fmt.Sprintf("%v", fileContentLength))
-	req.Header.Set("x-ms-type", fileTypeConstant)
+	req.Header.Set("x-ms-type", "file")
 	if fileContentType != nil {
 		req.Header.Set("x-ms-content-type", *fileContentType)
 	}
