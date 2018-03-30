@@ -199,7 +199,7 @@ func (client ShareClient) deletePreparer(sharesnapshot *string, timeout *int32, 
 	params.Set("restype", "share")
 	req.URL.RawQuery = params.Encode()
 	req.Header.Set("x-ms-version", ServiceVersion)
-	if deleteSnapshots != DeleteSnapshotsOptionTypeNone {
+	if deleteSnapshots != DeleteSnapshotsOptionNone {
 		req.Header.Set("x-ms-delete-snapshots", fmt.Sprintf("%v", deleteSnapshots))
 	}
 	return req, nil

@@ -103,88 +103,88 @@ func joinConst(s interface{}, sep string) string {
 type CopyStatusType string
 
 const (
-	// Aborted ...
-	Aborted CopyStatusType = "aborted"
-	// Failed ...
-	Failed CopyStatusType = "failed"
-	// None CopyStatusNone represents an empty CopyStatusType.
-	None CopyStatusType = ""
-	// Pending ...
-	Pending CopyStatusType = "pending"
-	// Success ...
-	Success CopyStatusType = "success"
+	// CopyStatusAborted ...
+	CopyStatusAborted CopyStatusType = "aborted"
+	// CopyStatusFailed ...
+	CopyStatusFailed CopyStatusType = "failed"
+	// CopyStatusNone CopyStatusNone represents an empty CopyStatusType.
+	CopyStatusNone CopyStatusType = ""
+	// CopyStatusPending ...
+	CopyStatusPending CopyStatusType = "pending"
+	// CopyStatusSuccess ...
+	CopyStatusSuccess CopyStatusType = "success"
 )
 
 // PossibleCopyStatusTypeValues returns an array of possible values for the CopyStatusType const type.
 func PossibleCopyStatusTypeValues() []CopyStatusType {
-	return []CopyStatusType{Aborted, Failed, None, Pending, Success}
+	return []CopyStatusType{CopyStatusAborted, CopyStatusFailed, CopyStatusNone, CopyStatusPending, CopyStatusSuccess}
 }
 
 // DeleteSnapshotsOptionType enumerates the values for delete snapshots option type.
 type DeleteSnapshotsOptionType string
 
 const (
-	// DeleteSnapshotsOptionTypeInclude ...
-	DeleteSnapshotsOptionTypeInclude DeleteSnapshotsOptionType = "include"
-	// DeleteSnapshotsOptionTypeNone DeleteSnapshotsOptionNone represents an empty
+	// DeleteSnapshotsOptionInclude ...
+	DeleteSnapshotsOptionInclude DeleteSnapshotsOptionType = "include"
+	// DeleteSnapshotsOptionNone DeleteSnapshotsOptionNone represents an empty
 	// DeleteSnapshotsOptionType.
-	DeleteSnapshotsOptionTypeNone DeleteSnapshotsOptionType = ""
+	DeleteSnapshotsOptionNone DeleteSnapshotsOptionType = ""
 )
 
 // PossibleDeleteSnapshotsOptionTypeValues returns an array of possible values for the DeleteSnapshotsOptionType const type.
 func PossibleDeleteSnapshotsOptionTypeValues() []DeleteSnapshotsOptionType {
-	return []DeleteSnapshotsOptionType{DeleteSnapshotsOptionTypeInclude, DeleteSnapshotsOptionTypeNone}
+	return []DeleteSnapshotsOptionType{DeleteSnapshotsOptionInclude, DeleteSnapshotsOptionNone}
 }
 
 // EntryType enumerates the values for entry type.
 type EntryType string
 
 const (
-	// EntryTypeDirectory ...
-	EntryTypeDirectory EntryType = "Directory"
-	// EntryTypeEntry ...
-	EntryTypeEntry EntryType = "Entry"
-	// EntryTypeFile ...
-	EntryTypeFile EntryType = "File"
+	// EntryDirectory ...
+	EntryDirectory EntryType = "Directory"
+	// EntryEntry ...
+	EntryEntry EntryType = "Entry"
+	// EntryFile ...
+	EntryFile EntryType = "File"
 )
 
 // PossibleEntryTypeValues returns an array of possible values for the EntryType const type.
 func PossibleEntryTypeValues() []EntryType {
-	return []EntryType{EntryTypeDirectory, EntryTypeEntry, EntryTypeFile}
+	return []EntryType{EntryDirectory, EntryEntry, EntryFile}
 }
 
 // FileRangeWriteType enumerates the values for file range write type.
 type FileRangeWriteType string
 
 const (
-	// FileRangeWriteTypeClear ...
-	FileRangeWriteTypeClear FileRangeWriteType = "clear"
-	// FileRangeWriteTypeNone FileRangeWriteNone represents an empty FileRangeWriteType.
-	FileRangeWriteTypeNone FileRangeWriteType = ""
-	// FileRangeWriteTypeUpdate ...
-	FileRangeWriteTypeUpdate FileRangeWriteType = "update"
+	// FileRangeWriteClear ...
+	FileRangeWriteClear FileRangeWriteType = "clear"
+	// FileRangeWriteNone FileRangeWriteNone represents an empty FileRangeWriteType.
+	FileRangeWriteNone FileRangeWriteType = ""
+	// FileRangeWriteUpdate ...
+	FileRangeWriteUpdate FileRangeWriteType = "update"
 )
 
 // PossibleFileRangeWriteTypeValues returns an array of possible values for the FileRangeWriteType const type.
 func PossibleFileRangeWriteTypeValues() []FileRangeWriteType {
-	return []FileRangeWriteType{FileRangeWriteTypeClear, FileRangeWriteTypeNone, FileRangeWriteTypeUpdate}
+	return []FileRangeWriteType{FileRangeWriteClear, FileRangeWriteNone, FileRangeWriteUpdate}
 }
 
 // ListSharesIncludeType enumerates the values for list shares include type.
 type ListSharesIncludeType string
 
 const (
-	// ListSharesIncludeTypeMetadata ...
-	ListSharesIncludeTypeMetadata ListSharesIncludeType = "metadata"
-	// ListSharesIncludeTypeNone ListSharesIncludeNone represents an empty ListSharesIncludeType.
-	ListSharesIncludeTypeNone ListSharesIncludeType = ""
-	// ListSharesIncludeTypeSnapshots ...
-	ListSharesIncludeTypeSnapshots ListSharesIncludeType = "snapshots"
+	// ListSharesIncludeMetadata ...
+	ListSharesIncludeMetadata ListSharesIncludeType = "metadata"
+	// ListSharesIncludeNone ListSharesIncludeNone represents an empty ListSharesIncludeType.
+	ListSharesIncludeNone ListSharesIncludeType = ""
+	// ListSharesIncludeSnapshots ...
+	ListSharesIncludeSnapshots ListSharesIncludeType = "snapshots"
 )
 
 // PossibleListSharesIncludeTypeValues returns an array of possible values for the ListSharesIncludeType const type.
 func PossibleListSharesIncludeTypeValues() []ListSharesIncludeType {
-	return []ListSharesIncludeType{ListSharesIncludeTypeMetadata, ListSharesIncludeTypeNone, ListSharesIncludeTypeSnapshots}
+	return []ListSharesIncludeType{ListSharesIncludeMetadata, ListSharesIncludeNone, ListSharesIncludeSnapshots}
 }
 
 // AccessPolicy - An Access policy.
@@ -347,7 +347,7 @@ type DirectoryEntry struct {
 	XMLName xml.Name `xml:"Directory"`
 	// Name - Name of the entry.
 	Name string `xml:"Name"`
-	// EntryType - Possible values include: 'EntryTypeEntry', 'EntryTypeDirectory', 'EntryTypeFile'
+	// EntryType - Possible values include: 'EntryEntry', 'EntryDirectory', 'EntryFile'
 	EntryType EntryType `xml:"EntryType"`
 }
 
@@ -373,7 +373,7 @@ func (de DirectoryEntry) AsBasicEntry() (BasicEntry, bool) {
 
 // MarshalXML is the custom marshaler for DirectoryEntry.
 func (de DirectoryEntry) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	de.EntryType = EntryTypeDirectory
+	de.EntryType = EntryDirectory
 	type Alias DirectoryEntry
 	return e.EncodeElement(struct {
 		Alias
@@ -705,7 +705,7 @@ type BasicEntry interface {
 type Entry struct {
 	// Name - Name of the entry.
 	Name string `xml:"Name"`
-	// EntryType - Possible values include: 'EntryTypeEntry', 'EntryTypeDirectory', 'EntryTypeFile'
+	// EntryType - Possible values include: 'EntryEntry', 'EntryDirectory', 'EntryFile'
 	EntryType EntryType `xml:"EntryType"`
 }
 
@@ -731,25 +731,25 @@ func (eVar Entry) AsBasicEntry() (BasicEntry, bool) {
 
 func unmarshalBasicEntry(d *xml.Decoder, start xml.StartElement) (BasicEntry, error) {
 	switch start.Name.Local {
-	case string(EntryTypeDirectory):
+	case string(EntryDirectory):
 		var de DirectoryEntry
 		err := d.DecodeElement(&de, &start)
 		if err == nil {
-			de.EntryType = EntryTypeDirectory
+			de.EntryType = EntryDirectory
 		}
 		return de, err
-	case string(EntryTypeFile):
+	case string(EntryFile):
 		var fe FileEntry
 		err := d.DecodeElement(&fe, &start)
 		if err == nil {
-			fe.EntryType = EntryTypeFile
+			fe.EntryType = EntryFile
 		}
 		return fe, err
 	default:
 		var eVar Entry
 		err := d.DecodeElement(&eVar, &start)
 		if err == nil {
-			eVar.EntryType = EntryTypeEntry
+			eVar.EntryType = EntryEntry
 		}
 		return eVar, err
 	}
@@ -757,21 +757,25 @@ func unmarshalBasicEntry(d *xml.Decoder, start xml.StartElement) (BasicEntry, er
 func unmarshalBasicEntryArray(d *xml.Decoder, start xml.StartElement) ([]BasicEntry, error) {
 	eVarArray := []BasicEntry{}
 	for t, err := d.Token(); err == nil; t, err = d.Token() {
-		tt, ok := t.(xml.StartElement)
-		if !ok {
-			continue
+		ttStart, ok := t.(xml.StartElement)
+		if ok {
+			eVar, err := unmarshalBasicEntry(d, ttStart)
+			if err == nil {
+				eVarArray = append(eVarArray, eVar)
+			}
 		}
-		eVar, err := unmarshalBasicEntry(d, tt)
-		if err == nil {
-			eVarArray = append(eVarArray, eVar)
+		ttEnd, ok := t.(xml.EndElement)
+		if ok && start.End() == ttEnd {
+			break
 		}
+		continue
 	}
 	return eVarArray, nil
 }
 
 // MarshalXML is the custom marshaler for Entry.
 func (eVar Entry) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	eVar.EntryType = EntryTypeEntry
+	eVar.EntryType = EntryEntry
 	type Alias Entry
 	return e.EncodeElement(struct {
 		Alias
@@ -938,7 +942,7 @@ type FileEntry struct {
 	XMLName xml.Name `xml:"File"`
 	// Name - Name of the entry.
 	Name string `xml:"Name"`
-	// EntryType - Possible values include: 'EntryTypeEntry', 'EntryTypeDirectory', 'EntryTypeFile'
+	// EntryType - Possible values include: 'EntryEntry', 'EntryDirectory', 'EntryFile'
 	EntryType  EntryType     `xml:"EntryType"`
 	Properties *FileProperty `xml:"Properties"`
 }
@@ -965,7 +969,7 @@ func (fe FileEntry) AsBasicEntry() (BasicEntry, bool) {
 
 // MarshalXML is the custom marshaler for FileEntry.
 func (fe FileEntry) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	fe.EntryType = EntryTypeFile
+	fe.EntryType = EntryFile
 	type Alias FileEntry
 	return e.EncodeElement(struct {
 		Alias
